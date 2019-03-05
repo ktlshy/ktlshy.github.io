@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/favicon.ico?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="[TOC] 构造函数与 prototype任何函数都有 prototype，但一般只讨论构造函数的 prototype。 123456function Person(name, age) &amp;#123;	this.name = name;	this.age = age;&amp;#125;const p = new Person(&quot;ok&quot;, 23);Person.prototype; //&amp;#123;con">
+<meta name="keywords" content="JavaScript深入系列">
+<meta property="og:type" content="article">
+<meta property="og:title" content="原型与原型链">
+<meta property="og:url" content="http://iaminvoker.com/2018/02/09/2018-02-09-原型与原型链/index.html">
+<meta property="og:site_name" content="二层楼">
+<meta property="og:description" content="[TOC] 构造函数与 prototype任何函数都有 prototype，但一般只讨论构造函数的 prototype。 123456function Person(name, age) &amp;#123;	this.name = name;	this.age = age;&amp;#125;const p = new Person(&quot;ok&quot;, 23);Person.prototype; //&amp;#123;con">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://static.iaminvoker.com/18-1-29/33192803.jpg">
+<meta property="og:image" content="http://static.iaminvoker.com/18-1-29/83826637.jpg">
+<meta property="og:image" content="http://static.iaminvoker.com/18-1-29/46210567.jpg">
+<meta property="og:image" content="http://static.iaminvoker.com/18-1-29/51585653.jpg">
+<meta property="og:image" content="http://static.iaminvoker.com/18-1-29/58209995.jpg">
+<meta property="og:image" content="http://static.iaminvoker.com/18-2-11/63142550.jpg">
+<meta property="og:image" content="http://static.iaminvoker.com/18-2-11/706377.jpg">
+<meta property="og:image" content="http://static.iaminvoker.com/18-2-11/90596915.jpg">
+<meta property="og:image" content="http://static.iaminvoker.com/18-2-11/13727604.jpg">
+<meta property="og:image" content="http://static.iaminvoker.com/18-2-11/41206230.jpg">
+<meta property="og:image" content="http://static.iaminvoker.com/18-2-11/60342453.jpg">
+<meta property="og:image" content="http://static.iaminvoker.com/18-2-11/67888177.jpg">
+<meta property="og:updated_time" content="2018-12-17T11:06:48.008Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="原型与原型链">
+<meta name="twitter:description" content="[TOC] 构造函数与 prototype任何函数都有 prototype，但一般只讨论构造函数的 prototype。 123456function Person(name, age) &amp;#123;	this.name = name;	this.age = age;&amp;#125;const p = new Person(&quot;ok&quot;, 23);Person.prototype; //&amp;#123;con">
+<meta name="twitter:image" content="http://static.iaminvoker.com/18-1-29/33192803.jpg">
+
+
+
+
+
+
+  <link rel="canonical" href="http://iaminvoker.com/2018/02/09/2018-02-09-原型与原型链/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>原型与原型链 | 二层楼</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion .logo-line-before i { left: initial; }
+    .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">二层楼</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://iaminvoker.com/2018/02/09/2018-02-09-原型与原型链/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="二层楼">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">原型与原型链
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-02-09 13:37:08" itemprop="dateCreated datePublished" datetime="2018-02-09T13:37:08+08:00">2018-02-09</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-12-17 19:06:48" itemprop="dateModified" datetime="2018-12-17T19:06:48+08:00">2018-12-17</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/JavaScript深入系列/" itemprop="url" rel="index"><span itemprop="name">JavaScript深入系列</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>[TOC]</p>
+<h2 id="构造函数与-prototype"><a href="#构造函数与-prototype" class="headerlink" title="构造函数与 prototype"></a>构造函数与 prototype</h2><p>任何函数都有 prototype，但一般只讨论构造函数的 prototype。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name, age</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.name = name;</span><br><span class="line">	<span class="keyword">this</span>.age = age;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> p = <span class="keyword">new</span> Person(<span class="string">"ok"</span>, <span class="number">23</span>);</span><br><span class="line">Person.prototype; <span class="comment">//&#123;constructor:Person&#125;</span></span><br></pre></td></tr></table></figure>
+<p>函数的 prototype 指向这个函数创建的实例对象的原型，也就是 p 的原型。</p>
+<p>可以这样理解对象的原型：每个 JavaScript 对象(null 除外)在创建时，都会有一个和它关联的对象，这个对象就是原型，新建的对象可以从原型”继承”属性。</p>
+<p><img src="http://static.iaminvoker.com/18-1-29/33192803.jpg" alt=""></p>
+<h2 id="proto"><a href="#proto" class="headerlink" title="__proto__"></a><code>__proto__</code></h2><p>每个对象(null 除外)都有一个 <code>__proto__</code> 属性指向这个对象的原型。 函数通过 prototype 表示实例的原型，实例对象通过<code>__proto__</code> 表示对象的原型。这是个非标准属性，只能在谷歌或者火狐下访问。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">p.__proto__ === Person.prototype; <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://static.iaminvoker.com/18-1-29/83826637.jpg" alt=""></p>
+<h2 id="constructor-NaN"><a href="#constructor-NaN" class="headerlink" title="constructor"></a>constructor</h2><p>构造函数可以通过 prototype 指向原型，原型也可以通过 constructor 指向构造函数，每个原型都有一个 constructor 属性指向关联的构造函数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Person.prototype.constructor === Person; <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://static.iaminvoker.com/18-1-29/46210567.jpg" alt=""></p>
+<p>通过上面的关系图，可以得出：</p>
+<p>构造函数的 prototype 指向原型对象，原型对象的 constructor 属性指向构造函数，而实例对象的<code>__proto__</code> 指向实例对象的原型。实例在查找属性时，首先从自身开始检索，当自身没有查找到该属性时，就会向原型上搜索。</p>
+<p>但是当对象的原型上也没有查找到该属性时，就会去查找原型的原型。</p>
+<h2 id="原型的原型"><a href="#原型的原型" class="headerlink" title="原型的原型"></a>原型的原型</h2><p>记住一点，实例的<code>__proto__</code> 指向构造函数的 prototype，而构造函数的 prototype 本身也是个(由 Object 构造函数生成的)实例对象，那么这个对象的 <code>__proto__</code> 就应该指向 Object 的 prototype。</p>
+<p><img src="http://static.iaminvoker.com/18-1-29/51585653.jpg" alt=""></p>
+<p>那么 Object.prototype 的原型呢？是 null。null 表示没有对象，它是原型链的终点。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Object</span>.prototype.__proto__ === <span class="literal">null</span>; <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://static.iaminvoker.com/18-1-29/58209995.jpg" alt=""></p>
+<p>如上，普通的构造函数遵循这样的原型链图，那么内置的构造函数，如 Array、String 呢？</p>
+<p>拿 Array 举个栗子</p>
+<p><img src="http://static.iaminvoker.com/18-2-11/63142550.jpg" alt=""></p>
+<p>Array 就类似于自己写的构造函数，那么它的 prototype 属性就是一个原型对象(普通对象)，实例的<code>__proto__</code>指向构造它的构造函数的原型属性。也就是上图的<code>Array.prototype.__proto__===Object.prototype</code>,其他的内置对象和这里类似。</p>
+<p>在 JavaScript 中，有一个特殊的”对象”——函数(Function)，函数既然是一种特殊的对象，那么它应该也遵循这条链。</p>
+<p><img src="http://static.iaminvoker.com/18-2-11/706377.jpg" alt=""></p>
+<p><img src="http://static.iaminvoker.com/18-2-11/90596915.jpg" alt=""></p>
+<p>​ 到这里原型链看似就很清楚了，但还有一个问题，函数是可以通过 new Function()构建的，这就意味着 像 Array、Object 这类构造函数都是(意淫的)通过 new Function()生成的。那么再套用那句话，实例的<code>__proto__</code> 指向构造它的构造函数的原型对象。</p>
+<p><img src="http://static.iaminvoker.com/18-2-11/13727604.jpg" alt=""></p>
+<p><img src="http://static.iaminvoker.com/18-2-11/41206230.jpg" alt=""></p>
+<p>看了上图，一脸懵逼，Function.prototype 是 Object 实例化的，Object 又是 Function 实例化的，这就产生了”先有鸡还是先有蛋的”经典问题。哲学！</p>
+<p>对于这个问题，网上大佬有各种理解，我个人比较倾向于的是：</p>
+<p>这些内置对象是在 JavaScript 内部本身就存在的，并不存在这种构造生成的过程，但是为了遵循 JavaScript 的基于原型链的面向对象的思想，才有了这么一个意淫出来的构造过程。因此，才有了这个更匪夷所思的结果。</p>
+<p><img src="http://static.iaminvoker.com/18-2-11/60342453.jpg" alt=""></p>
+<p>因为 Function 本身也是构造函数，也是 new Function()出来的啊(手动滑稽)。</p>
+<p>当然，还有一种说法，看起来也挺合理的。</p>
+<p>天地初开，一片虚空，只有一个 null</p>
+<p>null 很无聊，就创造出了 Object.prototype，Object.prototype 更无聊，就造出来了 Function.prototype</p>
+<p>Function.prototype 很牛叉，就给 Object.prototype 找了个伴儿，叫 Object，也给自己找了个伴儿，叫 Function</p>
+<p>然后它们这一家子就创造了万物。。。</p>
+<p><img src="http://static.iaminvoker.com/18-2-11/67888177.jpg" alt=""></p>
+<p>通过以上的胡扯，可以看出，JavaScript 的原型链的设计正如刺客信条一样——「Nothing is true,every is permitted.（万物皆虚，万事皆允）」。</p>
+<p>仔细去理解这些设计，又觉得如此的哲学。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JavaScript深入系列/" rel="tag"># JavaScript深入系列</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/09/2018-02-09-继承/" rel="next" title="继承">
+                <i class="fa fa-chevron-left"></i> 继承
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/09/2018-02-09-理解对象/" rel="prev" title="理解对象">
+                理解对象 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#构造函数与-prototype"><span class="nav-number">1.</span> <span class="nav-text">构造函数与 prototype</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#proto"><span class="nav-number">2.</span> <span class="nav-text">__proto__</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#constructor-NaN"><span class="nav-number">3.</span> <span class="nav-text">constructor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原型的原型"><span class="nav-number">4.</span> <span class="nav-text">原型的原型</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v6.6.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

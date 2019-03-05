@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.6.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/favicon.ico?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.6.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="[TOC] 对象的定义对象是一个无序属性的集合，这些属性可以包括基本值、对象或者函数 对象的属性数据属性数据属性是一个包含数据值的属性，可以对这个属性进行读写。数据属性有4个描述其行为地特性。  [[Configurable]]:可配置性，它表示这个属性是否可以通过delete删除，是否可以修改属性特性，是否可以修改为访问器属性。使用对象字面量定义的属性这个值默认为true。 [[Enumerab">
+<meta name="keywords" content="JavaScript深入系列">
+<meta property="og:type" content="article">
+<meta property="og:title" content="理解对象">
+<meta property="og:url" content="http://iaminvoker.com/2018/02/09/2018-02-09-理解对象/index.html">
+<meta property="og:site_name" content="二层楼">
+<meta property="og:description" content="[TOC] 对象的定义对象是一个无序属性的集合，这些属性可以包括基本值、对象或者函数 对象的属性数据属性数据属性是一个包含数据值的属性，可以对这个属性进行读写。数据属性有4个描述其行为地特性。  [[Configurable]]:可配置性，它表示这个属性是否可以通过delete删除，是否可以修改属性特性，是否可以修改为访问器属性。使用对象字面量定义的属性这个值默认为true。 [[Enumerab">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-05-03T09:32:23.664Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="理解对象">
+<meta name="twitter:description" content="[TOC] 对象的定义对象是一个无序属性的集合，这些属性可以包括基本值、对象或者函数 对象的属性数据属性数据属性是一个包含数据值的属性，可以对这个属性进行读写。数据属性有4个描述其行为地特性。  [[Configurable]]:可配置性，它表示这个属性是否可以通过delete删除，是否可以修改属性特性，是否可以修改为访问器属性。使用对象字面量定义的属性这个值默认为true。 [[Enumerab">
+
+
+
+
+
+
+  <link rel="canonical" href="http://iaminvoker.com/2018/02/09/2018-02-09-理解对象/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>理解对象 | 二层楼</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion .logo-line-before i { left: initial; }
+    .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">二层楼</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://iaminvoker.com/2018/02/09/2018-02-09-理解对象/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="二层楼">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">理解对象
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-02-09 13:37:08" itemprop="dateCreated datePublished" datetime="2018-02-09T13:37:08+08:00">2018-02-09</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-05-03 17:32:23" itemprop="dateModified" datetime="2018-05-03T17:32:23+08:00">2018-05-03</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/JavaScript深入系列/" itemprop="url" rel="index"><span itemprop="name">JavaScript深入系列</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>[TOC]</p>
+<h2 id="对象的定义"><a href="#对象的定义" class="headerlink" title="对象的定义"></a>对象的定义</h2><p>对象是一个无序属性的集合，这些属性可以包括基本值、对象或者函数</p>
+<h2 id="对象的属性"><a href="#对象的属性" class="headerlink" title="对象的属性"></a>对象的属性</h2><h3 id="数据属性"><a href="#数据属性" class="headerlink" title="数据属性"></a>数据属性</h3><p>数据属性是一个包含数据值的属性，可以对这个属性进行读写。数据属性有4个描述其行为地特性。</p>
+<ul>
+<li>[[Configurable]]:可配置性，它表示这个属性是否可以通过delete删除，是否可以修改属性特性，是否可以修改为访问器属性。使用对象字面量定义的属性这个值默认为true。</li>
+<li>[[Enumerable]]:可枚举性，它表示这个属性是否可以被for-in 遍历出来。使用对象字面量定义的属性这个值默认为true。</li>
+<li>[[Writable]]:可写性，它表示这个属性的值是否可以被修改。使用对象字面量定义的属性这个值默认为true。</li>
+<li>[[Value]]:值，它包含这个属性的数据值，读取这个属性时从这里读，写入属性值的时候把新值保存在这里，这个特性默认值为undefined。</li>
+</ul>
+<p>想要修改这些属性的特性，需要使用<code>Object.defineProperty()</code> 方法，这个方法接受三个参数，要修改的属性所在的对象，要修改的属性名，一个对象描述符。</p>
+<p>将属性修改为不可写后，在非严格模式下，赋值操作被忽略了，但在严格模式下，将抛出错误。</p>
+<p>将属性修改为不可配置后，就无法修改除了writable以外的特性。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj =&#123;</span><br><span class="line">  name:<span class="string">'ojbk'</span>,</span><br><span class="line">  age:<span class="number">24</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">Object</span>.defineProperty(obj,<span class="string">'age'</span>,&#123;</span><br><span class="line">  writable:<span class="literal">false</span></span><br><span class="line">&#125;);</span><br><span class="line">obj.age = <span class="number">25</span>;</span><br><span class="line"><span class="built_in">console</span>.log(obj.age);<span class="comment">//24</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">Object</span>.defineProperty(obj,<span class="string">'name'</span>,&#123;</span><br><span class="line">configurable:<span class="literal">false</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">delete</span> obj.name;<span class="comment">//什么也不会发生</span></span><br><span class="line"><span class="built_in">console</span>.log(obj.name);<span class="comment">//'ojbk'</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">Object</span>.defineProperty(obj,<span class="string">'name'</span>,&#123;</span><br><span class="line">enumerable:<span class="literal">true</span></span><br><span class="line">&#125;);<span class="comment">//err</span></span><br></pre></td></tr></table></figure>
+<h3 id="访问器属性"><a href="#访问器属性" class="headerlink" title="访问器属性"></a>访问器属性</h3><p>访问器属性不包含值属性，它包含了一对getter和setter函数，在读取访问器属性时，会调用getter函数，在写入访问器属性时，会调用setter函数。访问器属性也包含了4个特性：</p>
+<ul>
+<li>[[Configurable]]:可配置性，它表示这个属性是否可以通过delete删除，是否可以修改属性特性，是否可以修改为数据属性。使用对象字面量定义的属性这个值默认为true。</li>
+<li>[[Enumerable]]:可枚举性，它表示这个属性是否可以被for-in 遍历出来。使用对象字面量定义的属性这个值默认为true。</li>
+<li>[[Get]]:在读取属性值时调用的函数，默认为undefined。</li>
+<li>[[Set]]:在写入属性值时调用的函数，默认为undefined。</li>
+</ul>
+<p>不一定需要同时定义[[Get]]和[[Set]]，只定义了[[Get]]意味着这个属性是只读的，在严格模式下尝试写入会跑出错误，同理，只定义[[Set]]表明这个属性是只写的。</p>
+<h3 id="同时设置多个属性"><a href="#同时设置多个属性" class="headerlink" title="同时设置多个属性"></a>同时设置多个属性</h3><p>Object.defineProperties()，这个方法接受两个参数，需要设置属性的对象和属性描述符。</p>
+<h3 id="获取属性描述符"><a href="#获取属性描述符" class="headerlink" title="获取属性描述符"></a>获取属性描述符</h3><p>Object.getOwnPropertyDescriptor(),这个方法接受两个参数，属性所在的对象和需要获取描述符的属性</p>
+<h2 id="创建对象"><a href="#创建对象" class="headerlink" title="创建对象"></a>创建对象</h2><h3 id="简单创建"><a href="#简单创建" class="headerlink" title="简单创建"></a>简单创建</h3><p>创建一个简单对象一般有三种方法：</p>
+<ul>
+<li>通过new创建</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = <span class="keyword">new</span> <span class="built_in">Object</span>()</span><br></pre></td></tr></table></figure>
+<ul>
+<li>对象字面量(最常用)</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = &#123;&#125;;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Object.create()</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = <span class="built_in">Object</span>.create(&#123;<span class="attr">a</span>:<span class="number">1</span>&#125;);</span><br><span class="line"><span class="built_in">console</span>.log(obj.a);<span class="comment">//a</span></span><br></pre></td></tr></table></figure>
+<p>这个方法接受两个参数，第一个是这个新对象的原型，第二个属性用来描述对象的属性。如果给这个函数传递null作为第一个参数，那么新建的对象将不会继承任何东西，比如基础方法。如果给这个函数传递Object.prototype作为第一个参数，那它就和使用new或者对象字面量创建的对象一样。这是一个强大的方法，通过他可以实现继承。</p>
+<h3 id="模式创建"><a href="#模式创建" class="headerlink" title="模式创建"></a>模式创建</h3><ul>
+<li><h5 id="工厂模式"><a href="#工厂模式" class="headerlink" title="工厂模式"></a>工厂模式</h5></li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">personFactory</span>(<span class="params">name,age</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">const</span> o = &#123;&#125;;</span><br><span class="line">	o.name = name;</span><br><span class="line">    o.age = age;</span><br><span class="line">    o.sayName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">     <span class="built_in">console</span>.log(<span class="keyword">this</span>.name)</span><br><span class="line">    &#125;;</span><br><span class="line">  <span class="keyword">return</span> o;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> obj = personFactory(<span class="string">'ojbk'</span>,<span class="number">24</span>);</span><br><span class="line">obj.sayName();<span class="comment">//'ojbk'</span></span><br></pre></td></tr></table></figure>
+<p>这个模式解决了创建相似对象的问题，但这样创建的对象无法识别(不知道这个对象到底是谁创建的)。</p>
+<ul>
+<li><h5 id="构造函数模式"><a href="#构造函数模式" class="headerlink" title="构造函数模式"></a>构造函数模式</h5></li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name,age</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name;</span><br><span class="line">  <span class="keyword">this</span>.age = age;</span><br><span class="line">  <span class="keyword">this</span>.sayName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="keyword">this</span>.name)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> p1 = <span class="keyword">new</span> Person(<span class="string">'ok'</span>,<span class="number">12</span>);</span><br><span class="line">p1.sayName();<span class="comment">//'ojbk'</span></span><br><span class="line"><span class="keyword">const</span> p2 = <span class="keyword">new</span> Person(<span class="string">'ojbk'</span>,<span class="number">24</span>);</span><br><span class="line">p2.sayName();<span class="comment">//'ojbk'</span></span><br></pre></td></tr></table></figure>
+<p>在创建实例的时候，使用new操作符，这种方式调用构造函数经历4个步骤：</p>
+<ol>
+<li>创建一个新对象；</li>
+<li>将构造函数的作用域赋给新对象(指定this)</li>
+<li>执行构造函数中的代码(给新对象添加属性)</li>
+<li>返回这个新对象</li>
+</ol>
+<p>这样创建的对象就可以判断到底是谁创建了它们。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">p1.constructor === Person;<span class="comment">//true</span></span><br><span class="line">p1.instanceof Person;<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+<p>使用这种方法有一个问题就是会在每个实例上都会重新创建每个方法，但是，一个函数如果是完成相同功能 那么重复创建是没有必要的。</p>
+<ul>
+<li><h5 id="原型模式"><a href="#原型模式" class="headerlink" title="原型模式"></a>原型模式</h5></li>
+</ul>
+<p>函数拥有一个prototype属性，这个属性指向一个对象，这个对象可以包含实例可以共享的所有属性和方法。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">&#125;</span><br><span class="line">Person.prototype.name = <span class="string">'ok'</span>;</span><br><span class="line">Person.prototype.age = <span class="number">24</span>;</span><br><span class="line">Person.prototype.sayName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">this</span>.name);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> p1 = <span class="keyword">new</span> Person();</span><br><span class="line">p1.sayName();<span class="comment">//24</span></span><br></pre></td></tr></table></figure>
+<p>上面的写法过于繁琐，因此有一种简单写法：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">&#125;</span><br><span class="line">Person.prototype =&#123;</span><br><span class="line">  name:<span class="string">'ok'</span>,</span><br><span class="line">  age:<span class="number">24</span>,</span><br><span class="line">  sayName:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.name)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> p1 = <span class="keyword">new</span> Person();</span><br><span class="line">p1.sayName();<span class="comment">//24</span></span><br></pre></td></tr></table></figure>
+<p>将Person.prototype 指向一个新的对象，相当于切断了Person.prototype与真正原型之间的联系,因此需要重新指定构造函数</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">p1.constructor === Person;<span class="comment">//false</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//重新指定构造函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">&#125;</span><br><span class="line">Person.prototype =&#123;</span><br><span class="line">  <span class="keyword">constructor</span>:Person,</span><br><span class="line">  name:'ok',</span><br><span class="line">  age:24,</span><br><span class="line">  </span><br><span class="line">  sayName:function()&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.name)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> p = <span class="keyword">new</span> Person(<span class="string">'ok'</span>,<span class="number">23</span>);</span><br><span class="line">p.constructor === Person;<span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+<p>使用原型模式存在两个问题：第一个是由于没有为构造函数传递初始值，因此所有的实例都将取得一样的默认值，第二个也是最严重的问题，原型对象是共享的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  </span><br><span class="line">&#125;;</span><br><span class="line">Person.prototype =&#123;</span><br><span class="line">  <span class="keyword">constructor</span>:Person,</span><br><span class="line">  name:'ok',</span><br><span class="line">  age:24,</span><br><span class="line">  skills:['HTML','css','js'],</span><br><span class="line">  sayName:function()&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.name)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> p1 = <span class="keyword">new</span> Person();</span><br><span class="line"><span class="keyword">const</span> p2 = <span class="keyword">new</span> Person();</span><br><span class="line"></span><br><span class="line">p1.skills;<span class="comment">//['HTML','css','js']</span></span><br><span class="line">p2.skills;<span class="comment">//['HTML','css','js']</span></span><br><span class="line">p1.skills.push(<span class="string">'php'</span>);</span><br><span class="line">p1.skills;<span class="comment">//['HTML','css','js','php'];</span></span><br><span class="line">p2.skills;<span class="comment">//['HTML','css','js','php']//WTF</span></span><br></pre></td></tr></table></figure>
+<p>由于原型对象共享的特性，某个实例的修改会影响所有的实例属性。</p>
+<ul>
+<li><h5 id="构造模式与原型模式的组合模式"><a href="#构造模式与原型模式的组合模式" class="headerlink" title="构造模式与原型模式的组合模式"></a>构造模式与原型模式的组合模式</h5></li>
+</ul>
+<p>鉴于构造模式和原型模式都有各自的优缺点，将两者组合起来就可以集两者之长。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name,age</span>)</span>&#123;</span><br><span class="line"> <span class="keyword">this</span>.name = name;</span><br><span class="line">  <span class="keyword">this</span>.age = age;</span><br><span class="line">&#125;;</span><br><span class="line">Person.prototype =&#123;</span><br><span class="line">  <span class="keyword">constructor</span>:Person,</span><br><span class="line">  sayName:function()&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.name)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种模式创建的对象，每个实例即拥有自己的属性，又拥有共享的方法，因此，这种模式是最常见的模式。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JavaScript深入系列/" rel="tag"># JavaScript深入系列</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/09/2018-02-09-原型与原型链/" rel="next" title="原型与原型链">
+                <i class="fa fa-chevron-left"></i> 原型与原型链
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/09/2018-02-09-Event-Loop/" rel="prev" title="Event Loop">
+                Event Loop <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#对象的定义"><span class="nav-number">1.</span> <span class="nav-text">对象的定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对象的属性"><span class="nav-number">2.</span> <span class="nav-text">对象的属性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据属性"><span class="nav-number">2.1.</span> <span class="nav-text">数据属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#访问器属性"><span class="nav-number">2.2.</span> <span class="nav-text">访问器属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#同时设置多个属性"><span class="nav-number">2.3.</span> <span class="nav-text">同时设置多个属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取属性描述符"><span class="nav-number">2.4.</span> <span class="nav-text">获取属性描述符</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建对象"><span class="nav-number">3.</span> <span class="nav-text">创建对象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简单创建"><span class="nav-number">3.1.</span> <span class="nav-text">简单创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模式创建"><span class="nav-number">3.2.</span> <span class="nav-text">模式创建</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#工厂模式"><span class="nav-number">3.2.0.1.</span> <span class="nav-text">工厂模式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#构造函数模式"><span class="nav-number">3.2.0.2.</span> <span class="nav-text">构造函数模式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#原型模式"><span class="nav-number">3.2.0.3.</span> <span class="nav-text">原型模式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#构造模式与原型模式的组合模式"><span class="nav-number">3.2.0.4.</span> <span class="nav-text">构造模式与原型模式的组合模式</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v6.6.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
